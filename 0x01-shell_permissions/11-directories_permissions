@@ -1,0 +1,2 @@
+#!/bin/bash
+chmodn-R ugo+X 
