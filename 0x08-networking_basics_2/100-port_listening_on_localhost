@@ -1,0 +1,4 @@
+#!/usr/bin/ env bash
+# This script allows localhost listen on 98
+
+nc -l localhost 98
