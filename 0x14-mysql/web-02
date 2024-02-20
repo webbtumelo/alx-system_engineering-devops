@@ -1,0 +1,2 @@
+erver 02
+ssh ubuntu@100.26.152.121 -i ~/.ssh/school
