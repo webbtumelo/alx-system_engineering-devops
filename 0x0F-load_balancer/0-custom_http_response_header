@@ -1,11 +1,42 @@
 #!/usr/bin/env bash
-# Configure Nginx so that its HTTP response contains a custom header (on web-01
-# and web-02)
-sudo apt-get -y update
-sudo apt-get -y install nginx
-sudo ufw allow 'Nginx HTTP'
-echo "Alx-school" | sudo tee /var/www/html/index.nginx-debian.html
-echo -e "Ceci n'est pas une page\n" | sudo tee /usr/share/nginx/html/custom_404.html
-sudo sed -i "/listen 80 default_server;/a add_header X-Served-By \"$HOSTNAME\";" /etc/nginx/sites-available/default
-sudo sed -i "/listen \[\:\:\]\:80 default_server;/a rewrite ^/redirect_me https://www.youtube.com permanent;\n\n error_page 404 /custom_404.html;\nlocation = /custom_404.html { root /usr/share/nginx/html; internal; }\n\n" /etc/nginx/sites-available/default
+# Download and confiure a web server
+
+# Update package list
+sudo apt-get update
+
+# Install Nginx
+sudo apt -y install nginx
+
+# Start Nginx
 sudo service nginx start
+
+# Create a simple HTML page
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+# Create a simple error page
+echo "Ola Passito lekaae" | sudo tee /var/www/html/404.html
+
+# Configure Nginx
+printf '%s\n' "server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	# Add a custom header
+	add_header X-Served-By \$hostname;
+
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	location /redirect_me {
+		return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+	}
+	
+	error_page 404 /404.html;
+	
+	location = /404.html{
+		internal;
+	}
+}" | sudo tee /etc/nginx/sites-available/default > /dev/null
+ 
+# Reload Nginx
+sudo service nginx reload
