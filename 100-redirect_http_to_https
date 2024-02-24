@@ -36,13 +36,13 @@ defaults
 frontend  globalticket-frontend-http
         bind *:80
         mode http
-        bind *:443 ssl crt /etc/haproxy/certs/globalticket.tech.pem
 	http-request set-header X-Forwarded-Proto http
         default_backend globalticket-backend
 
 frontend globalticket-frontend-https
-	bind *:443 
+	bind *:443 ssl crt /etc/haproxy/certs/globalticket.tech.pem
 	http-request set-header X-Forwarded-Proto https
+	http-request redirect scheme https code 301 unless { ssl_fc }
 	default_backend globalticket-backend
 
 backend globalticket-backend
